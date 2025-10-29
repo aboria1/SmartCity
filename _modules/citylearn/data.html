@@ -814,11 +814,6 @@
 <span class="sd">            3: &#39;Commuting (vehicle is away)&#39;</span>
 <span class="sd">    electric_vehicle_id : np.array</span>
 <span class="sd">        Identifier for the electric vehicle.</span>
-<span class="sd">    electric_vehicle_battery_capacity_kwh : np.array</span>
-<span class="sd">        Battery capacity of the vehicle (in kilowatt-hours).</span>
-<span class="sd">    current_soc : np.array</span>
-<span class="sd">        Current state-of-charge of the EV battery at the charger (normalized [0, 1]).</span>
-<span class="sd">        This is calculated from the raw kWh value divided by capacity.</span>
 <span class="sd">    electric_vehicle_departure_time : np.array</span>
 <span class="sd">        Number of time steps expected until the EV departs from the charger (only for state 1).</span>
 <span class="sd">        Defaults to -1 when not present.</span>
@@ -839,15 +834,13 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">electric_vehicle_charger_state</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
         <span class="n">electric_vehicle_id</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">electric_vehicle_battery_capacity_khw</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-        <span class="n">current_soc</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">electric_vehicle_departure_time</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">electric_vehicle_required_soc_departure</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">electric_vehicle_estimated_arrival_time</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">electric_vehicle_estimated_soc_arrival</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">start_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">end_time_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">noise_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">noise_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize ChargerSchedule from charger-centric EV CSV input.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">start_time_step</span><span class="o">=</span><span class="n">start_time_step</span><span class="p">,</span> <span class="n">end_time_step</span><span class="o">=</span><span class="n">end_time_step</span><span class="p">)</span>
@@ -863,16 +856,7 @@
         <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">electric_vehicle_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">electric_vehicle_id</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">electric_vehicle_battery_capacity_kwh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="n">electric_vehicle_battery_capacity_khw</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
-        <span class="p">)</span>
 
-        <span class="n">current_soc_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">current_soc</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-        <span class="n">current_soc_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">current_soc_arr</span><span class="p">),</span> <span class="n">default_soc_value</span><span class="p">,</span> <span class="n">current_soc_arr</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_soc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-            <span class="n">current_soc_arr</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">electric_vehicle_battery_capacity_kwh</span><span class="p">,</span>
-            <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
-        <span class="p">)</span>
 
         <span class="n">departure_time_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">electric_vehicle_departure_time</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">electric_vehicle_departure_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
