@@ -1,5 +1,9 @@
 import sys
-sys.path.insert(0, '..')
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 from stable_baselines3 import SAC
 from stable_baselines3.common.env_checker import check_env
 from citylearn.citylearn import CityLearnEnv
@@ -31,6 +35,6 @@ observations = env.reset()
 
 while not env.done:
     actions, _ = model.predict(observations, deterministic=True)
-    observations, reward, _, _ = env.step(actions)
+    observations, reward, _, _, _ = env.step(actions)
 
 print(env.evaluate_citylearn_challenge())
