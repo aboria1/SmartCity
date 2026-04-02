@@ -104,7 +104,7 @@ def simulate(simulation_id, schema, solar_penalty_coefficient, comfort_coefficie
 
     while not env.done:
         actions, _ = model.predict(observations, deterministic=True)
-        observations, _, _, _ = env.step(actions)
+        observations, _, _, _, _ = env.step(actions)
 
     save_data(env, simulation_id, simulation_output_path, start_timestamp, episodes, 'test')
 
@@ -216,7 +216,7 @@ def set_work_order(schema, buildings, coefficient_start, coefficient_end, coeffi
     os.makedirs(simulation_output_path, exist_ok=True)
     
     for i, c in enumerate(coefficient_list):
-        work_order += f'python reward_exploration.py simulate simulation_{i} {schema} {c[0]} {c[1]} {episodes} {simulation_output_path} -b {" ".join([str(b) for b in buildings])}\n'
+        work_order += f'python scripts/manual/experiment_reward_exploration.py simulate simulation_{i} {schema} {c[0]} {c[1]} {episodes} {simulation_output_path} -b {" ".join([str(b) for b in buildings])}\n'
 
     filepath = 'reward_exploration.sh' if filepath is None else filepath
 

@@ -20,6 +20,9 @@ ZERO_DIVISION_PLACEHOLDER = 0.000001
 MISC_DIRECTORY = os.path.join(os.path.dirname(__file__), 'misc')
 QUERIES_DIRECTORY = os.path.join(MISC_DIRECTORY, 'queries')
 SETTINGS_FILEPATH = os.path.join(MISC_DIRECTORY, 'settings.yaml')
+LOCAL_DATA_MISC_DIRECTORY = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), '..', 'data', 'misc')
+)
 
 def get_settings():
     directory = os.path.join(os.path.join(os.path.dirname(__file__), 'misc'))
@@ -31,9 +34,9 @@ def get_settings():
 class DataSet:
     """CityLearn input data set and schema class."""
 
-    GITHUB_ACCOUNT = 'intelligent-environments-lab'
-    REPOSITORY_NAME = 'CityLearn'
-    REPOSITORY_TAG = f'v{__version__}'
+    GITHUB_ACCOUNT = os.getenv('CITYLEARN_DATASET_GITHUB_ACCOUNT', 'intelligent-environments-lab')
+    REPOSITORY_NAME = os.getenv('CITYLEARN_DATASET_REPOSITORY', 'CityLearn')
+    REPOSITORY_TAG = os.getenv('CITYLEARN_DATASET_TAG', f'v{__version__}')
     REPOSITORY_DATA_PATH = FileHandler.join_url('data')
     REPOSITORY_DATA_DATASETS_PATH = FileHandler.join_url(REPOSITORY_DATA_PATH, 'datasets')
     REPOSITORY_DATA_MISC_PATH = FileHandler.join_url(REPOSITORY_DATA_PATH, 'misc')
@@ -201,6 +204,13 @@ class DataSet:
         filepath = os.path.join(misc_directory, self.PV_CHOICES_FILENAME)
         path = FileHandler.join_url(self.misc_path)
 
+        # Prefer local repository data to avoid unnecessary network usage.
+        if not os.path.isfile(filepath):
+            local_filepath = os.path.join(LOCAL_DATA_MISC_DIRECTORY, self.PV_CHOICES_FILENAME)
+
+            if os.path.isfile(local_filepath):
+                shutil.copy(local_filepath, filepath)
+
         # check that file DNE
         if not os.path.isfile(filepath):
             LOGGER.info(f'The PV sizing data DNE in cache. Will download from '
@@ -233,6 +243,13 @@ class DataSet:
         os.makedirs(misc_directory, exist_ok=True)
         filepath = os.path.join(misc_directory, self.BATTERY_CHOICES_FILENAME)
         path = FileHandler.join_url(self.misc_path)
+
+        # Prefer local repository data to avoid unnecessary network usage.
+        if not os.path.isfile(filepath):
+            local_filepath = os.path.join(LOCAL_DATA_MISC_DIRECTORY, self.BATTERY_CHOICES_FILENAME)
+
+            if os.path.isfile(local_filepath):
+                shutil.copy(local_filepath, filepath)
 
         # check that file DNE
         if not os.path.isfile(filepath):
@@ -310,6 +327,35 @@ class TimeSeriesData:
         self.start_time_step = start_time_step
         self.end_time_step = end_time_step
 
+    @staticmethod
+    def _slice_variable(variable: Any, start_time_step: int, end_time_step: int):
+        if isinstance(variable, np.ndarray):
+            start_index = 0 if start_time_step is None else start_time_step
+            end_index = variable.shape[0] if end_time_step is None else end_time_step + 1
+            return variable[start_index:end_index]
+
+        if isinstance(variable, (list, tuple)):
+            start_index = 0 if start_time_step is None else start_time_step
+            end_index = len(variable) if end_time_step is None else end_time_step + 1
+            return variable[start_index:end_index]
+
+        return variable
+
+    def __getattribute__(self, name: str):
+        if name.startswith('__'):
+            return object.__getattribute__(self, name)
+
+        data = object.__getattribute__(self, '__dict__')
+        variable_name = f'_{name}'
+
+        if variable_name in data:
+            start_time_step = data.get('_start_time_step')
+            end_time_step = data.get('_end_time_step')
+            variable = data[variable_name]
+            return self._slice_variable(variable, start_time_step, end_time_step)
+
+        return object.__getattribute__(self, name)
+
     def __getattr__(self, name: str, start_time_step: int = None, end_time_step: int = None):
         """Returns values of the named variable within the specified time steps and
         is useful for selecting episode-specific observation."""
@@ -319,16 +365,9 @@ class TimeSeriesData:
             variable = self.__dict__[f'_{name}']
         except KeyError:
             raise AttributeError(f'_{name}')
-        
-        if isinstance(variable, Iterable):
-            start_time_step = self.start_time_step if start_time_step is None else start_time_step
-            start_index = 0 if start_time_step is None else start_time_step
-            end_time_step = self.end_time_step if end_time_step is None else end_time_step
-            end_index = len(variable) if end_time_step is None else end_time_step + 1
-            return variable[start_index:end_index]
-        
-        else:
-            return variable
+        start_time_step = self.start_time_step if start_time_step is None else start_time_step
+        end_time_step = self.end_time_step if end_time_step is None else end_time_step
+        return self._slice_variable(variable, start_time_step, end_time_step)
         
     def __setattr__(self, name: str, value: Any):
         """Sets named variable.
@@ -400,7 +439,7 @@ class EnergySimulation(TimeSeriesData):
         self, month: Iterable[int], hour: Iterable[int], day_type: Iterable[int],
          indoor_dry_bulb_temperature: Iterable[float], 
         non_shiftable_load: Iterable[float], dhw_demand: Iterable[float], cooling_demand: Iterable[float], heating_demand: Iterable[float], solar_generation: Iterable[float], 
-        daylight_savings_status: Iterable[int] = None, average_unmet_cooling_setpoint_difference: Iterable[float] = None, indoor_relative_humidity: Iterable[float] = None, occupant_count: Iterable[int] = None, indoor_dry_bulb_temperature_cooling_set_point: Iterable[int] = None, indoor_dry_bulb_temperature_heating_set_point: Iterable[int] = None, hvac_mode: Iterable[int] = None, power_outage: Iterable[int] = None, comfort_band: Iterable[float] = None, start_time_step: int = None, end_time_step: int = None,  seconds_per_time_step: int = None, minutes: Iterable[int] = None, time_step_ratios: list[int]= [], noise_std = 0.0
+        daylight_savings_status: Iterable[int] = None, average_unmet_cooling_setpoint_difference: Iterable[float] = None, indoor_relative_humidity: Iterable[float] = None, occupant_count: Iterable[int] = None, indoor_dry_bulb_temperature_cooling_set_point: Iterable[int] = None, indoor_dry_bulb_temperature_heating_set_point: Iterable[int] = None, hvac_mode: Iterable[int] = None, power_outage: Iterable[int] = None, comfort_band: Iterable[float] = None, start_time_step: int = None, end_time_step: int = None,  seconds_per_time_step: int = None, minutes: Iterable[int] = None, time_step_ratios: List[float] = None, noise_std = 0.0
     ):
         super().__init__(start_time_step=start_time_step, end_time_step=end_time_step)
         self.noise_std = noise_std
@@ -451,8 +490,9 @@ class EnergySimulation(TimeSeriesData):
             if seconds_per_time_step and base_step_seconds
             else None
         )
-        time_step_ratios.append(time_step_ratio)
-        self.time_step_ratios = time_step_ratios # Store the ratio for this building
+        ratios = [] if time_step_ratios is None else list(time_step_ratios)
+        ratios.append(time_step_ratio)
+        self.time_step_ratios = ratios
 
         self.noise_std = noise_std
 

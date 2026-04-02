@@ -1,57 +1,7 @@
 import pickle
-from typing import Any, Iterable, Union
-import numpy as np
+from typing import Any
 import simplejson as json
 import yaml
-
-
-def parse_bool(value: Any, default: Any = None, path: str = 'value'):
-    """Parse boolean-like values from schema/config sources.
-
-    Accepted inputs:
-    - bool
-    - int/np.integer: 0 or 1
-    - float/np.floating: 0.0 or 1.0
-    - str (case-insensitive): true/false, 1/0, yes/no, on/off
-
-    Parameters
-    ----------
-    value: Any
-        Value to parse.
-    default: Any, optional
-        Fallback value if `value` is None.
-    path: str, default: 'value'
-        Config path used in validation error messages.
-    """
-
-    if value is None:
-        if default is None:
-            return None
-        return parse_bool(default, default=None, path=path)
-
-    if isinstance(value, (bool, np.bool_)):
-        return bool(value)
-
-    if isinstance(value, (int, np.integer)) and not isinstance(value, bool):
-        if int(value) in (0, 1):
-            return bool(int(value))
-        raise ValueError(f"{path} must be one of: true/false, 1/0, yes/no, on/off.")
-
-    if isinstance(value, (float, np.floating)):
-        if float(value) in (0.0, 1.0):
-            return bool(int(float(value)))
-        raise ValueError(f"{path} must be one of: true/false, 1/0, yes/no, on/off.")
-
-    if isinstance(value, str):
-        token = value.strip().lower()
-        if token in {'true', '1', 'yes', 'on'}:
-            return True
-        if token in {'false', '0', 'no', 'off'}:
-            return False
-        raise ValueError(f"{path} must be one of: true/false, 1/0, yes/no, on/off.")
-
-    raise ValueError(f"{path} must be one of: true/false, 1/0, yes/no, on/off.")
-
 
 class FileHandler:
     @staticmethod
@@ -194,31 +144,3 @@ class FileHandler:
 
         return url
     
-class NoiseUtils:
-    @staticmethod
-    def generate_gaussian_noise(input_data: Union[np.ndarray, Iterable[float]], noise_std: float) -> np.ndarray:
-        """Generates Gaussian noise matching input shape.
-        
-        Parameters
-        ----------
-        input_data : Union[np.ndarray, Iterable[float]]
-            Time series to add noise to.
-        noise_std : float
-            Noise standard deviation (ignored if <= 0)
-            
-        Returns
-        -------
-            noise: np.ndarray
-                Zero-mean noise array with same shape as input
-        """
-
-        arr = np.asarray(input_data)  # Handles both ndarray and Iterable
-        if noise_std <= 0:
-            return np.zeros(arr.shape)
-        return np.random.normal(loc=0, scale=noise_std, size=arr.shape)
-
-    @staticmethod
-    def generate_scaled_noise(input_data: Union[np.ndarray, Iterable[float]], noise_std: float, scale: float = 1.0) -> np.ndarray:
-        """Generates pre-scaled noise (e.g., for percentage values)."""
-        
-        return NoiseUtils.generate_gaussian_noise(input_data, noise_std) * scale
