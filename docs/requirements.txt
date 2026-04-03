@@ -2,7 +2,8 @@ setuptools
 jinja2
 myst-nb
 nbsphinx-link
-Sphinx
+Sphinx<9
+docutils<0.22
 sphinxemoji
 sphinxcontrib-bibtex
 sphinx-argparse
