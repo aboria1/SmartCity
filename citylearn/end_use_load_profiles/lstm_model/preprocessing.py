@@ -120,12 +120,16 @@ def dataset_dataloader(x: np.ndarray, y: np.ndarray, batch_size: int, shuffle: b
 
 def sliding_windows(data: np.ndarray, seq_length: int, output_len: int):
     """
-    Check that the variable to be predicted is the last column of the dataframe
-    :param data: dataframe
-    :param seq_length: lookback
-    :param output_len: how many timetep ahead will be predicted
-    :return: x = matrix [number of timestep - lookback, lookback, number of input variables];
-             y = matrix [number of timestep - lookback, number of output variables]
+    Create sliding window input/output arrays.
+
+    The target variable is expected to be the last column in ``data``.
+
+    :param data: Input array.
+    :param seq_length: Number of lookback time steps.
+    :param output_len: Number of time steps ahead to predict.
+    :return: Tuple ``(x, y)`` where ``x`` has shape
+        ``[num_steps - seq_length, seq_length, num_input_variables]`` and
+        ``y`` has shape ``[num_steps - seq_length, output_len]``.
     """
     
     x = []
