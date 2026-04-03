@@ -3,5 +3,5 @@ citylearn.wrappers module
 
 .. automodule:: citylearn.wrappers
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

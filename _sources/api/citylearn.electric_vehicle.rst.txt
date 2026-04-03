@@ -3,5 +3,5 @@ citylearn.electric\_vehicle module
 
 .. automodule:: citylearn.electric_vehicle
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

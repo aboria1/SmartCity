@@ -3,5 +3,5 @@ citylearn.occupant module
 
 .. automodule:: citylearn.occupant
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

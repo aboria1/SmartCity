@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>citylearn.electric_vehicle_charger &mdash; CityLearn 2.5.0 documentation</title>
+  <title>citylearn.electric_vehicle_charger &mdash; CityLearn 2.6.0b1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/sphinx-dropdown.css?v=995e94df" />
       <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.min.css?v=21c0b90a" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=3c4615cf"></script>
+      <script src="../../_static/documentation_options.js?v=5bac50f9"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -99,7 +99,8 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">episode_tracker</span><span class="p">:</span> <span class="n">EpisodeTracker</span><span class="p">,</span> <span class="n">charger_simulation</span><span class="p">:</span> <span class="n">ChargerSimulation</span> <span class="p">,</span><span class="n">charger_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">efficiency</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">max_charging_power</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">min_charging_power</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">max_discharging_power</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="n">min_discharging_power</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">charge_efficiency_curve</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">discharge_efficiency_curve</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">connected_electric_vehicle</span><span class="p">:</span> <span class="n">ElectricVehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">incoming_electric_vehicle</span><span class="p">:</span> <span class="n">ElectricVehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">time_step_ratio</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">discharge_efficiency_curve</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">connected_electric_vehicle</span><span class="p">:</span> <span class="n">ElectricVehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">incoming_electric_vehicle</span><span class="p">:</span> <span class="n">ElectricVehicle</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">phase_connection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">time_step_ratio</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Initializes the `Electric Vehicle Charger` class with the given attributes.</span>
@@ -137,6 +138,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">discharge_efficiency_curve</span> <span class="o">=</span> <span class="n">discharge_efficiency_curve</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connected_electric_vehicle</span> <span class="o">=</span> <span class="n">connected_electric_vehicle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incoming_electric_vehicle</span> <span class="o">=</span> <span class="n">incoming_electric_vehicle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase_connection</span> <span class="o">=</span> <span class="n">phase_connection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">charger_simulation</span> <span class="o">=</span> <span class="n">charger_simulation</span>
 
         <span class="n">arg_spec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
@@ -214,6 +216,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Technical efficiency.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__efficiency</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Electrical phase connection assignment.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__phase_connection</span>
 
 
     <span class="nd">@property</span>
@@ -297,6 +305,10 @@
     <span class="nd">@incoming_electric_vehicle</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">incoming_electric_vehicle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">electric_vehicle</span><span class="p">:</span> <span class="n">ElectricVehicle</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__incoming_ev</span> <span class="o">=</span> <span class="n">electric_vehicle</span>
+
+    <span class="nd">@phase_connection</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_connection</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__phase_connection</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">phase_connection</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">phase_connection</span><span class="p">)</span>
 
     <span class="nd">@time_step_ratio</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">time_step_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
@@ -388,43 +400,57 @@
 <span class="sd">        action_value : float</span>
 <span class="sd">            The normalized charging or discharging action (range [-1, 1]).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">action_value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">action_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">action_value</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
 
-
-            <span class="n">charging</span> <span class="o">=</span> <span class="n">action_value</span> <span class="o">&gt;</span> <span class="mi">0</span>
-            <span class="n">efficiency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_efficiency</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">action_value</span><span class="p">),</span> <span class="n">charging</span><span class="p">)</span>  <span class="c1"># Charging if action_value &gt; 0</span>
-
-
-
-            <span class="k">if</span> <span class="n">charging</span><span class="p">:</span>
-                <span class="n">power</span> <span class="o">=</span> <span class="n">action_value</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_charging_power</span>  <span class="c1"># Power in kW</span>
-                <span class="n">energy</span> <span class="o">=</span> <span class="n">power</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm_action_based_time_step_hours_ratio</span>  <span class="c1"># Convert to energy (kWh)</span>
-                <span class="n">energy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_charging_power</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_charging_power</span><span class="p">)</span>
-                <span class="n">energy_kwh</span> <span class="o">=</span> <span class="n">energy</span> <span class="o">*</span> <span class="n">efficiency</span>  <span class="c1"># For charging</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">power</span> <span class="o">=</span> <span class="n">action_value</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_discharging_power</span>  <span class="c1"># Power in kW</span>
-                <span class="n">energy</span> <span class="o">=</span> <span class="n">power</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm_action_based_time_step_hours_ratio</span>  <span class="c1"># Convert to energy (kWh)</span>
-                <span class="n">energy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">min_discharging_power</span><span class="p">),</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">max_discharging_power</span><span class="p">)</span>  <span class="c1"># For discharging</span>
-                <span class="n">energy_kwh</span> <span class="o">=</span> <span class="n">energy</span> <span class="o">/</span> <span class="n">efficiency</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__past_charging_action_values_kwh</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected_electric_vehicle</span><span class="p">:</span>
-                <span class="n">electric_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected_electric_vehicle</span>
-
-                <span class="c1"># Charge or discharge the battery</span>
-                <span class="n">electric_vehicle</span><span class="o">.</span><span class="n">battery</span><span class="o">.</span><span class="n">charge</span><span class="p">(</span><span class="n">energy_kwh</span><span class="p">)</span>
-
-                <span class="n">battery_energy_balance</span> <span class="o">=</span> <span class="n">electric_vehicle</span><span class="o">.</span><span class="n">battery</span><span class="o">.</span><span class="n">energy_balance</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span>
-                <span class="c1"># Store electricity consumption</span>
-
-                <span class="bp">self</span><span class="o">.</span><span class="n">__electricity_consumption</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span> <span class="o">=</span> <span class="n">battery_energy_balance</span><span class="o">/</span><span class="n">efficiency</span> <span class="k">if</span> <span class="n">battery_energy_balance</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">battery_energy_balance</span><span class="o">*</span><span class="n">efficiency</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__electricity_consumption</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-
-
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">action_value</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="c1"># Keep EV SOC state consistent at the current timestep even when no power is requested.</span>
+            <span class="c1"># Without this, SOC at `time_step` can remain the zero-initialized default.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected_electric_vehicle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connected_electric_vehicle</span><span class="o">.</span><span class="n">battery</span><span class="o">.</span><span class="n">charge</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__electricity_consumption</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__past_charging_action_values_kwh</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__past_charging_action_values_kwh</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">return</span>
+
+        <span class="n">time_step_hours</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm_action_based_time_step_hours_ratio</span>
+        <span class="n">charging</span> <span class="o">=</span> <span class="n">action_value</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">efficiency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_efficiency</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">action_value</span><span class="p">),</span> <span class="n">charging</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">charging</span><span class="p">:</span>
+            <span class="n">requested_power_kw</span> <span class="o">=</span> <span class="n">action_value</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_charging_power</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_charging_power</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">applied_power_kw</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lower_bound_kw</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_charging_power</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_charging_power</span><span class="p">)</span>
+                <span class="n">applied_power_kw</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">requested_power_kw</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_charging_power</span><span class="p">),</span> <span class="n">lower_bound_kw</span><span class="p">)</span>
+            <span class="n">commanded_energy_kwh</span> <span class="o">=</span> <span class="n">applied_power_kw</span> <span class="o">*</span> <span class="n">time_step_hours</span>
+            <span class="n">battery_energy_kwh</span> <span class="o">=</span> <span class="n">commanded_energy_kwh</span> <span class="o">*</span> <span class="n">efficiency</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">requested_power_kw</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">action_value</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_discharging_power</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_discharging_power</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">applied_power_kw</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lower_bound_kw</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_discharging_power</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_discharging_power</span><span class="p">)</span>
+                <span class="n">applied_power_kw</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">requested_power_kw</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_discharging_power</span><span class="p">),</span> <span class="n">lower_bound_kw</span><span class="p">)</span>
+            <span class="n">commanded_energy_kwh</span> <span class="o">=</span> <span class="o">-</span><span class="n">applied_power_kw</span> <span class="o">*</span> <span class="n">time_step_hours</span>
+            <span class="n">battery_energy_kwh</span> <span class="o">=</span> <span class="n">commanded_energy_kwh</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">efficiency</span><span class="p">,</span> <span class="n">ZERO_DIVISION_PLACEHOLDER</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__past_charging_action_values_kwh</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span> <span class="o">=</span> <span class="n">commanded_energy_kwh</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected_electric_vehicle</span><span class="p">:</span>
+            <span class="n">electric_vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected_electric_vehicle</span>
+
+            <span class="c1"># Battery model expects dataset-resolution energy. Convert from control-step kWh when needed.</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">electric_vehicle</span><span class="o">.</span><span class="n">battery</span><span class="p">,</span> <span class="s1">&#39;time_step_ratio&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">battery_command</span> <span class="o">=</span> <span class="n">battery_energy_kwh</span> <span class="k">if</span> <span class="n">ratio</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="n">battery_energy_kwh</span> <span class="o">/</span> <span class="n">ratio</span>
+            <span class="n">electric_vehicle</span><span class="o">.</span><span class="n">battery</span><span class="o">.</span><span class="n">charge</span><span class="p">(</span><span class="n">battery_command</span><span class="p">)</span>
+
+            <span class="n">battery_energy_balance</span> <span class="o">=</span> <span class="n">electric_vehicle</span><span class="o">.</span><span class="n">battery</span><span class="o">.</span><span class="n">energy_balance</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__electricity_consumption</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">battery_energy_balance</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">efficiency</span><span class="p">,</span> <span class="n">ZERO_DIVISION_PLACEHOLDER</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">battery_energy_balance</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">battery_energy_balance</span> <span class="o">*</span> <span class="n">efficiency</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__electricity_consumption</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 
 
@@ -448,7 +474,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">connected_electric_vehicle</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incoming_electric_vehicle</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__electricity_consumption</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">episode_tracker</span><span class="o">.</span><span class="n">episode_time_steps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">episode_tracker</span><span class="o">.</span><span class="n">episode_time_steps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__past_charging_action_values_kwh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">episode_tracker</span><span class="o">.</span><span class="n">episode_time_steps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__past_connected_evs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_tracker</span><span class="o">.</span><span class="n">episode_time_steps</span></div>
 

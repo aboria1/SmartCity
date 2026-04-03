@@ -3,8 +3,8 @@ citylearn.agents package
 
 .. automodule:: citylearn.agents
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------
