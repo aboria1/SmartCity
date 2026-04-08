@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; CityLearn 2.6.0b1 documentation</title>
+  <title>Index &mdash; CityLearn 2.6.0b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=5bac50f9"></script>
+      <script src="_static/documentation_options.js?v=6c54da93"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -53,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="usage/index.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ui.html">CityLearn UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kpis.html">KPIs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">citylearn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="citylearn_challenge/index.html">The CityLearn Challenge</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
@@ -932,8 +933,6 @@
         <li><a href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.energy_from_electrical_storage">(citylearn.citylearn.CityLearnEnv property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/citylearn.building.html#citylearn.building.Building.energy_from_heating_device">energy_from_heating_device (citylearn.building.Building property)</a>
 
       <ul>
@@ -946,6 +945,8 @@
         <li><a href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.energy_from_heating_device_to_heating_storage">(citylearn.citylearn.CityLearnEnv property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/citylearn.building.html#citylearn.building.Building.energy_from_heating_storage">energy_from_heating_storage (citylearn.building.Building property)</a>
 
       <ul>
@@ -1032,6 +1033,8 @@
 </li>
       <li><a href="api/citylearn.building.html#citylearn.building.Building.estimate_observation_space_limits">estimate_observation_space_limits() (citylearn.building.Building method)</a>
 </li>
+      <li><a href="api/citylearn.internal.kpi.html#citylearn.internal.kpi.CityLearnKPIService.EV_DEPARTURE_WITHIN_TOLERANCE_DEFAULT">EV_DEPARTURE_WITHIN_TOLERANCE_DEFAULT (citylearn.internal.kpi.CityLearnKPIService attribute)</a>
+</li>
       <li><a href="api/citylearn.end_use_load_profiles.lstm_model.model_generation.html#citylearn.end_use_load_profiles.lstm_model.model_generation.eval">eval() (in module citylearn.end_use_load_profiles.lstm_model.model_generation)</a>
 </li>
       <li><a href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.evaluate">evaluate() (citylearn.citylearn.CityLearnEnv method)</a>
@@ -1040,6 +1043,16 @@
         <li><a href="api/citylearn.internal.kpi.html#citylearn.internal.kpi.CityLearnKPIService.evaluate">(citylearn.internal.kpi.CityLearnKPIService method)</a>
 </li>
         <li><a href="api/citylearn.wrappers.html#citylearn.wrappers.RLlibMultiAgentEnv.evaluate">(citylearn.wrappers.RLlibMultiAgentEnv method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/citylearn.internal.kpi.html#citylearn.internal.kpi.CityLearnKPIService.evaluate_legacy">evaluate_legacy() (citylearn.internal.kpi.CityLearnKPIService method)</a>
+</li>
+      <li><a href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.evaluate_v2">evaluate_v2() (citylearn.citylearn.CityLearnEnv method)</a>
+
+      <ul>
+        <li><a href="api/citylearn.internal.kpi.html#citylearn.internal.kpi.CityLearnKPIService.evaluate_v2">(citylearn.internal.kpi.CityLearnKPIService method)</a>
+</li>
+        <li><a href="api/citylearn.wrappers.html#citylearn.wrappers.RLlibMultiAgentEnv.evaluate_v2">(citylearn.wrappers.RLlibMultiAgentEnv method)</a>
 </li>
       </ul></li>
       <li><a href="api/citylearn.citylearn.html#citylearn.citylearn.EvaluationCondition">EvaluationCondition (class in citylearn.citylearn)</a>
@@ -1350,6 +1363,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/citylearn.agents.base.html#citylearn.agents.base.Agent.learn">learn() (citylearn.agents.base.Agent method)</a>
 </li>
+      <li><a href="api/citylearn.internal.kpi.html#citylearn.internal.kpi.CityLearnKPIService.LEGACY_COST_FUNCTIONS">LEGACY_COST_FUNCTIONS (citylearn.internal.kpi.CityLearnKPIService attribute)</a>
+</li>
       <li><a href="api/citylearn.internal.loading.html#citylearn.internal.loading.CityLearnLoadingService.load">load() (citylearn.internal.loading.CityLearnLoadingService method)</a>
 </li>
       <li><a href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.load_agent">load_agent() (citylearn.citylearn.CityLearnEnv method)</a>
@@ -1364,10 +1379,14 @@
 </li>
       <li><a href="api/citylearn.internal.loading.html#citylearn.internal.loading.LoadContext">LoadContext (class in citylearn.internal.loading)</a>
 </li>
-      <li><a href="api/citylearn.data.html#citylearn.data.DataSet.logging_level">logging_level (citylearn.data.DataSet property)</a>
+      <li><a href="api/citylearn.data.html#citylearn.data.DataSet.local_datasets_directories">local_datasets_directories (citylearn.data.DataSet property)</a>
+</li>
+      <li><a href="api/citylearn.data.html#citylearn.data.DataSet.local_misc_directories">local_misc_directories (citylearn.data.DataSet property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/citylearn.data.html#citylearn.data.DataSet.logging_level">logging_level (citylearn.data.DataSet property)</a>
+</li>
       <li><a href="api/citylearn.occupant.html#citylearn.occupant.LogisticRegressionOccupant">LogisticRegressionOccupant (class in citylearn.occupant)</a>
 </li>
       <li><a href="api/citylearn.building.html#citylearn.building.LogisticRegressionOccupantInteractionBuilding">LogisticRegressionOccupantInteractionBuilding (class in citylearn.building)</a>
@@ -1752,6 +1771,14 @@
       <li><a href="api/citylearn.building.html#citylearn.building.Building.occupant_count">occupant_count (citylearn.building.Building property)</a>
 </li>
       <li><a href="api/citylearn.building.html#citylearn.building.OccupantInteractionBuilding">OccupantInteractionBuilding (class in citylearn.building)</a>
+</li>
+      <li><a href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.offline">offline (citylearn.citylearn.CityLearnEnv property)</a>
+</li>
+      <li><a href="api/citylearn.data.html#citylearn.data.DataSet.OFFLINE">OFFLINE (citylearn.data.DataSet attribute)</a>
+</li>
+      <li><a href="api/citylearn.data.html#citylearn.data.DataSet.offline">offline (citylearn.data.DataSet property)</a>
+</li>
+      <li><a href="api/citylearn.data.html#citylearn.data.OfflineDataError">OfflineDataError</a>
 </li>
       <li><a href="api/citylearn.cost_function.html#citylearn.cost_function.CostFunction.one_minus_load_factor">one_minus_load_factor() (citylearn.cost_function.CostFunction static method)</a>
 </li>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CityLearn UI &mdash; CityLearn 2.6.0b1 documentation</title>
+  <title>CityLearn UI &mdash; CityLearn 2.6.0b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -17,7 +17,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=5bac50f9"></script>
+      <script src="_static/documentation_options.js?v=6c54da93"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -26,7 +26,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="citylearn" href="api/modules.html" />
+    <link rel="next" title="KPIs" href="kpis.html" />
     <link rel="prev" title="Command Line Interface" href="cli.html" /> 
 </head>
 
@@ -68,9 +68,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#selecting-simulations">Selecting Simulations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#viewing-simulation-data">Viewing Simulation Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#graphs-and-filters">Graphs and Filters</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#kpis-page-overview">KPIs Page Overview</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#comparing-simulations">Comparing Simulations</a></li>
 </ul>
 </li>
@@ -84,6 +81,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="kpis.html">KPIs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">citylearn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="citylearn_challenge/index.html">The CityLearn Challenge</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
@@ -129,7 +127,7 @@
 <h2>Exporting Data From CityLearn into CityLearn UI<a class="headerlink" href="#exporting-data-from-citylearn-into-citylearn-ui" title="Link to this heading"></a></h2>
 <p>CityLearn automatically exports the folder structure expected by the UI. The behaviour depends on <a class="reference internal" href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv" title="citylearn.citylearn.CityLearnEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">citylearn.citylearn.CityLearnEnv</span></code></a> <code class="docutils literal notranslate"><span class="pre">render_mode</span></code>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">render_mode='none'</span></code> (default): no CSVs are produced. Use this for fast headless runs where you do not need UI data, or call <a class="reference internal" href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.export_final_kpis" title="citylearn.citylearn.CityLearnEnv.export_final_kpis"><code class="xref py py-meth docutils literal notranslate"><span class="pre">citylearn.citylearn.CityLearnEnv.export_final_kpis()</span></code></a> manually afterwards to obtain the KPI table only.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">render_mode='none'</span></code> (default): no CSVs are produced. Use this for fast headless runs where you do not need UI data, or call <a class="reference internal" href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.export_final_kpis" title="citylearn.citylearn.CityLearnEnv.export_final_kpis"><code class="xref py py-meth docutils literal notranslate"><span class="pre">citylearn.citylearn.CityLearnEnv.export_final_kpis()</span></code></a> manually afterwards to obtain the V2 KPI table only.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">render_mode='during'</span></code>: the environment writes a row for every simulation step directly to disk (<code class="docutils literal notranslate"><span class="pre">&lt;project&gt;/SimulationData/&lt;timestamp&gt;</span></code> by default). Final KPIs are appended automatically once the episode ends—no extra script code is required.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">render_mode='end'</span></code>: per-step rows are buffered in memory and flushed to disk when the episode finishes (or whenever <a class="reference internal" href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.render" title="citylearn.citylearn.CityLearnEnv.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a> is invoked). As with <code class="docutils literal notranslate"><span class="pre">'during'</span></code>, the KPI export is triggered automatically at the end of the episode.</p></li>
 </ul>
@@ -179,7 +177,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Render folder:&#39;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">new_folder_path</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This pattern keeps rendering off (fastest) and emits only the KPI CSV once the run completes. Because timestep histories are not written, the resulting folder can be used with the <strong>KPIs</strong> page of the UI but not with the full time-series explorer.</p>
+<p>This pattern keeps rendering off (fastest) and emits only the KPI CSV once the run completes. Because timestep histories are not written, the resulting folder can be used with the <strong>KPIs</strong> page of the UI but not with the full time-series explorer. The KPI CSV is generated from <a class="reference internal" href="api/citylearn.citylearn.html#citylearn.citylearn.CityLearnEnv.evaluate_v2" title="citylearn.citylearn.CityLearnEnv.evaluate_v2"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate_v2()</span></code></a>, so the export follows the V2 naming tree by default.</p>
 </section>
 <section id="buffered-end-of-run-export-example">
 <h3>Buffered End-of-Run Export Example<a class="headerlink" href="#buffered-end-of-run-export-example" title="Link to this heading"></a></h3>
@@ -248,12 +246,8 @@
 <li><p>Toggle data series via checkboxes (green),</p></li>
 <li><p>Restrict start/end dates using the slider (blue).</p></li>
 </ul>
+<p>The KPI-specific tab is documented separately in <a class="reference internal" href="kpis.html"><span class="doc">KPIs</span></a>.</p>
 </section>
-</section>
-<section id="kpis-page-overview">
-<h3>KPIs Page Overview<a class="headerlink" href="#kpis-page-overview" title="Link to this heading"></a></h3>
-<p>The KPIs page allows uploading folders and selecting simulations for KPI analysis. Once a simulation is active, its KPIs appear in a table (rows = KPIs, columns = buildings).</p>
-<img alt="KPI table view" class="align-center" src="_images/kpis-data.png" />
 <section id="comparing-simulations">
 <h4>Comparing Simulations<a class="headerlink" href="#comparing-simulations" title="Link to this heading"></a></h4>
 <p>When multiple simulations are loaded, a <strong>Compare</strong> button lets you choose a reference run. The comparison tab shows <code class="docutils literal notranslate"><span class="pre">Simulation</span> <span class="pre">Y</span> <span class="pre">–</span> <span class="pre">Simulation</span> <span class="pre">X</span></code> deltas.</p>
@@ -300,7 +294,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="cli.html" class="btn btn-neutral float-left" title="Command Line Interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api/modules.html" class="btn btn-neutral float-right" title="citylearn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="kpis.html" class="btn btn-neutral float-right" title="KPIs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
