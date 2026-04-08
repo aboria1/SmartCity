@@ -15,7 +15,7 @@ import random
 from citylearn.base import Environment, EpisodeTracker
 from citylearn.building import Building, DynamicsBuilding
 from citylearn.cost_function import CostFunction
-from citylearn.data import CarbonIntensity, DataSet, ChargerSimulation, EnergySimulation, LogisticRegressionOccupantParameters, Pricing, WashingMachineSimulation, Weather
+from citylearn.data import CarbonIntensity, DataSet, OfflineDataError, ChargerSimulation, EnergySimulation, LogisticRegressionOccupantParameters, Pricing, WashingMachineSimulation, Weather
 from citylearn.electric_vehicle import ElectricVehicle
 from citylearn.energy_model import Battery, PV, WashingMachine
 from citylearn.exporter import EpisodeExporter
@@ -116,6 +116,9 @@ class CityLearnEnv(Environment, Env):
         each building independently in a :code:`List[bool]`. Will override :code:`pv` defined in the :code:`schema`.
     random_seed: int, optional
         Pseudorandom number generator seed for repeatable results.
+    offline: bool, default: False
+        If True, disables all network fallbacks for datasets and misc sizing data. Initialization fails with a clear
+        error when required files are not available locally.
 
     Other Parameters
     ----------------
@@ -150,7 +153,7 @@ class CityLearnEnv(Environment, Env):
         random_episode_split: bool = None, seconds_per_time_step: float = None, reward_function: Union[RewardFunction, str] = None, reward_function_kwargs: Mapping[str, Any] = None,
         central_agent: bool = None, shared_observations: List[str] = None, active_observations: Union[List[str], List[List[str]]] = None,
         inactive_observations: Union[List[str], List[List[str]]] = None, active_actions: Union[List[str], List[List[str]]] = None,
-        inactive_actions: Union[List[str], List[List[str]]] = None, simulate_power_outage: bool = None, solar_generation: bool = None, random_seed: int = None, time_step_ratio: int = None,
+        inactive_actions: Union[List[str], List[List[str]]] = None, simulate_power_outage: bool = None, solar_generation: bool = None, random_seed: int = None, offline: bool = None, time_step_ratio: int = None,
         start_date: Union[str, datetime.date] = None, render_session_name: str = None, render_mode: str = 'none',
         export_kpis_on_episode_end: bool = None, **kwargs: Any
     ):
@@ -169,10 +172,14 @@ class CityLearnEnv(Environment, Env):
         kw_render_session_name = kwargs.pop('render_session_name', None)
         if kw_render_session_name is not None:
             render_session_name = kw_render_session_name if render_session_name is None else render_session_name
+        self.offline = offline
         self.schema = schema
         self.community_market_enabled = False
         self.community_market_sell_ratio = 0.8
         self.community_market_grid_export_price = 0.0
+        self.community_market_import_member_weights: Mapping[str, float] = {}
+        self.community_market_kpi_local_traded_enabled = True
+        self.community_market_kpi_self_consumption_enabled = True
         self._last_community_market_settlement = []
         self._community_market_settlement_history = []
         self._configure_community_market()
@@ -341,6 +348,12 @@ class CityLearnEnv(Environment, Env):
         """`dict` object of CityLearn schema."""
 
         return self.__schema
+
+    @property
+    def offline(self) -> bool:
+        """Whether network access should be disabled for dataset/misc lookups."""
+
+        return self.__offline
 
     @property
     def render_enabled(self) -> bool:
@@ -912,18 +925,40 @@ class CityLearnEnv(Environment, Env):
 
     @schema.setter
     def schema(self, schema: Union[str, Path, Mapping[str, Any]]):
-        dataset = DataSet()
+        dataset = DataSet(offline=self.offline)
 
-        if isinstance(schema, (str, Path)) and os.path.isfile(schema):
-            schema_filepath = Path(schema) if isinstance(schema, str) else schema
-            schema = FileHandler.read_json(schema)
-            schema['root_directory'] = os.path.split(schema_filepath.absolute())[0] if schema['root_directory'] is None \
-                else schema['root_directory']
-        
-        elif isinstance(schema, str) and schema in dataset.get_dataset_names():
-            schema = dataset.get_schema(schema)
-            schema['root_directory'] = '' if schema['root_directory'] is None else schema['root_directory']
-        
+        if isinstance(schema, (str, Path)):
+            schema_path = Path(schema).expanduser()
+
+            if schema_path.is_dir():
+                schema_path = schema_path / 'schema.json'
+
+            if schema_path.is_file():
+                schema = FileHandler.read_json(schema_path)
+                schema['root_directory'] = os.path.split(schema_path.absolute())[0] if schema['root_directory'] is None \
+                    else schema['root_directory']
+
+            elif isinstance(schema, str):
+                try:
+                    dataset_names = dataset.get_dataset_names()
+                except OfflineDataError as e:
+                    raise UnknownSchemaError(str(e)) from e
+
+                if schema in dataset_names:
+                    schema = dataset.get_schema(schema)
+                    schema['root_directory'] = '' if schema['root_directory'] is None else schema['root_directory']
+                else:
+                    if self.offline:
+                        raise UnknownSchemaError(
+                            f"Schema '{schema}' was not found locally while offline mode is enabled. "
+                            "Provide a local schema.json file path or place the dataset under a local datasets root."
+                        )
+
+                    raise UnknownSchemaError()
+
+            else:
+                raise UnknownSchemaError(f'Schema file path does not exist: {schema_path}')
+
         elif isinstance(schema, dict):
             schema = deepcopy(schema)
             schema['root_directory'] = '' if schema['root_directory'] is None else schema['root_directory']
@@ -932,6 +967,10 @@ class CityLearnEnv(Environment, Env):
             raise UnknownSchemaError()
         
         self.__schema = schema
+
+    @offline.setter
+    def offline(self, value: bool):
+        self.__offline = False if value is None else bool(parse_bool(value, default=False, path='offline'))
 
     @render_enabled.setter
     def render_enabled(self, enabled: bool):
@@ -1007,8 +1046,14 @@ class CityLearnEnv(Environment, Env):
             'shared_observations': self.shared_observations,
             'community_market': {
                 'enabled': self.community_market_enabled,
+                'local_price_ratio_to_grid_import': self.community_market_sell_ratio,
                 'intra_community_sell_ratio': self.community_market_sell_ratio,
                 'grid_export_price': self.community_market_grid_export_price,
+                'import_member_weights': self.community_market_import_member_weights,
+                'kpis': {
+                    'community_local_traded_enabled': self.community_market_kpi_local_traded_enabled,
+                    'community_self_consumption_enabled': self.community_market_kpi_self_consumption_enabled,
+                },
                 'matching_granularity': 'aggregate_building',
             },
             'buildings': [b.get_metadata() for b in self.buildings],
@@ -1084,7 +1129,18 @@ class CityLearnEnv(Environment, Env):
     def evaluate(self, control_condition: EvaluationCondition = None, baseline_condition: EvaluationCondition = None, comfort_band: float = None) -> pd.DataFrame:
         r"""Evaluate cost functions at current time step."""
 
-        return self._kpi_service.evaluate(
+        return self._kpi_service.evaluate_legacy(
+            control_condition=control_condition,
+            baseline_condition=baseline_condition,
+            comfort_band=comfort_band,
+            evaluation_condition_cls=EvaluationCondition,
+            dynamics_building_cls=DynamicsBuilding,
+        )
+
+    def evaluate_v2(self, control_condition: EvaluationCondition = None, baseline_condition: EvaluationCondition = None, comfort_band: float = None) -> pd.DataFrame:
+        r"""Evaluate v2 cost functions at current time step."""
+
+        return self._kpi_service.evaluate_v2(
             control_condition=control_condition,
             baseline_condition=baseline_condition,
             comfort_band=comfort_band,
@@ -1237,7 +1293,7 @@ class CityLearnEnv(Environment, Env):
             default=False,
             path='community_market.enabled',
         )
-        ratio = config.get('intra_community_sell_ratio', 0.8)
+        ratio = config.get('local_price_ratio_to_grid_import', config.get('intra_community_sell_ratio', 0.8))
 
         try:
             ratio = float(ratio)
@@ -1246,6 +1302,27 @@ class CityLearnEnv(Environment, Env):
 
         self.community_market_sell_ratio = min(max(ratio, 0.0), 1.0)
         self.community_market_grid_export_price = config.get('grid_export_price', 0.0)
+        weights = config.get('import_member_weights', {}) or {}
+        parsed_weights = {}
+        if isinstance(weights, Mapping):
+            for key, value in weights.items():
+                try:
+                    parsed_weights[str(key)] = max(float(value), 0.0)
+                except (TypeError, ValueError):
+                    continue
+
+        self.community_market_import_member_weights = parsed_weights
+        kpis_config = config.get('kpis', {}) or {}
+        self.community_market_kpi_local_traded_enabled = parse_bool(
+            kpis_config.get('community_local_traded_enabled', True),
+            default=True,
+            path='community_market.kpis.community_local_traded_enabled',
+        )
+        self.community_market_kpi_self_consumption_enabled = parse_bool(
+            kpis_config.get('community_self_consumption_enabled', True),
+            default=True,
+            path='community_market.kpis.community_self_consumption_enabled',
+        )
 
     def update_variables(self):
         """Update district-level aggregate variables."""
